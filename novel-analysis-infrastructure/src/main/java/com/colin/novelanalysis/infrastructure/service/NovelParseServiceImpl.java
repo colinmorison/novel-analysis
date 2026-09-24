@@ -49,10 +49,16 @@ public class NovelParseServiceImpl implements NovelParseService {
             return;
         }
 
+        // CAS 抢锁：只有状态为 PENDING 时才允许开始解析，防止多节点重复解析
+        int rows = novelRepository.updateStatusIf(novelId, ParseStatus.PARSING.name(), ParseStatus.PENDING.name());
+        if (rows == 0) {
+            log.info("[parse] novelId={} already in processing or processed, skip", novelId);
+            return;
+        }
+        novel.setParseStatus(ParseStatus.PARSING.name());
+
         try {
             log.info("[parse] start novelId={}", novelId);
-            novel.startParsing();
-            novelRepository.updateStatus(novel);
 
             List<NovelParser.ChapterContent> contents;
             try (InputStream is = fileStorageService.download(novel.getMinioPath())) {

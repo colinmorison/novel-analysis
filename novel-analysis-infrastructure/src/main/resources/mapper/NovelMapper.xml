@@ -36,4 +36,10 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateStatusIf">
+        UPDATE novel
+        SET parse_status = #{newStatus}
+        WHERE id = #{id} AND parse_status = #{expectedStatus}
+    </update>
+
 </mapper>

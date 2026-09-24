@@ -37,4 +37,9 @@ public class NovelRepositoryImpl implements NovelRepository {
     public void updateStatus(Novel novel) {
         novelMapper.updateStatus(novel);
     }
+
+    @Override
+    public int updateStatusIf(Long id, String newStatus, String expectedStatus) {
+        return novelMapper.updateStatusIf(id, newStatus, expectedStatus);
+    }
 }

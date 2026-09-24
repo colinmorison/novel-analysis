@@ -16,4 +16,10 @@ public interface NovelRepository {
     List<Novel> findAll();
 
     void updateStatus(Novel novel);
+
+    /**
+     * CAS 更新状态，仅当当前状态为 expectedStatus 时才更新为 newStatus
+     * @return 实际更新的行数
+     */
+    int updateStatusIf(Long id, String newStatus, String expectedStatus);
 }
