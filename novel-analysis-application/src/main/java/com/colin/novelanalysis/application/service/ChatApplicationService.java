@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import reactor.core.publisher.Flux;
 
 import jakarta.validation.Valid;
 import java.util.function.Consumer;
@@ -27,5 +28,9 @@ public class ChatApplicationService {
 
     public void streamChat(@Valid ChatCommand command, Consumer<String> onChunk, Runnable onComplete) {
         chatAppService.streamChat(command, onChunk, onComplete);
+    }
+
+    public Flux<String> streamChat(@Valid ChatCommand command) {
+        return chatAppService.streamChat(command);
     }
 }

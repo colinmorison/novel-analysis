@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -69,6 +70,23 @@ public class ChatAppService {
                 .role("assistant").content(reply.toString()).timestamp(LocalDateTime.now()).build());
 
         onComplete.run();
+    }
+
+    public Flux<String> streamChat(ChatCommand command) {
+        String question = command.getUserMessage();
+        log.info("[streamChatFlux] session={} question={}", command.getSessionId(), StringUtils.abbreviate(question, 50));
+
+        String prompt = buildPrompt(command.getSessionId(), question);
+        StringBuilder reply = new StringBuilder();
+
+        return aiChatService.streamChatFlux(command.getSessionId(), prompt)
+                .doOnNext(token -> reply.append(token))
+                .doOnComplete(() -> {
+                    chatSessionRepository.addMessage(command.getSessionId(), ChatMessage.builder()
+                            .role("user").content(question).timestamp(LocalDateTime.now()).build());
+                    chatSessionRepository.addMessage(command.getSessionId(), ChatMessage.builder()
+                            .role("assistant").content(reply.toString()).timestamp(LocalDateTime.now()).build());
+                });
     }
 
     private String buildPrompt(String sessionId, String question) {

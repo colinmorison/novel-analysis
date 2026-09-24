@@ -77,8 +77,11 @@ mvn spring-boot:run -Dspring-boot.run.profiles=local
 ```bash
 curl -X POST http://localhost:8080/api/v1/novels/upload \
   -F "file=@/path/to/天龙八部.txt" \
-  -F 'request={"title":"天龙八部","author":"金庸"};type=application/json'
+  -F 'request={"title":"天龙八部","author":"金庸"};type=application/json' \
+  -H "Content-Type: multipart/form-data"
 ```
+
+> `request` 字段为 JSON 字符串，后端通过 `FormFieldPart` 接收后反序列化。
 
 ### 角色轨迹问答（JSON）
 

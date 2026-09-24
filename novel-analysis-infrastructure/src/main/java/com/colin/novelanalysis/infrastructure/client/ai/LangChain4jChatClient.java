@@ -9,6 +9,9 @@ import dev.langchain4j.model.output.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.FluxSink;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.function.Consumer;
 
@@ -49,4 +52,29 @@ public class LangChain4jChatClient implements AiChatService {
             }
         });
     }
+
+    @Override
+    public Flux<String> streamChatFlux(String sessionId, String userMessage) {
+        log.debug("[LangChain4j] stream flux session={}", sessionId);
+        return Flux.<String>create(sink -> {
+            streamingChatLanguageModel.generate(userMessage, new StreamingResponseHandler<AiMessage>() {
+                @Override
+                public void onNext(String token) {
+                    sink.next(token);
+                }
+
+                @Override
+                public void onComplete(Response<AiMessage> response) {
+                    sink.complete();
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    log.error("[LangChain4j] stream flux error", error);
+                    sink.error(error);
+                }
+            });
+        }, FluxSink.OverflowStrategy.BUFFER).subscribeOn(Schedulers.boundedElastic());
+    }
 }
+
