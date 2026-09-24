@@ -20,7 +20,7 @@ public class KnowledgeRepositoryImpl implements KnowledgeRepository {
     @Override
     public void saveBatch(List<KnowledgeChunk> chunks) {
         for (KnowledgeChunk chunk : chunks) {
-            knowledgeChunkMapper.insertWithEmbedding(chunk);
+            knowledgeChunkMapper.insert(chunk);
         }
     }
 

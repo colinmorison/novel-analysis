@@ -66,7 +66,7 @@
         │                              │                              │
 ┌───────▼──────────────────────────────▼──────────────────────────────▼───────┐
 │                       基础设施层 (infrastructure)                            │
-│  PostgreSQL(MyBatis-Plus)   Neo4j(SDNN)   Redis   MinIO   Kafka   LLM Client │
+│  PostgreSQL(MyBatis)   Neo4j(SDNN)   Redis   MinIO   Kafka   LLM Client │
 │  LangChain4jChatClient / DashScopeChatClient / OllamaChatClient ...          │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -559,9 +559,10 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 spring.datasource.hikari.maximum-pool-size=5
 spring.datasource.hikari.minimum-idle=2
 
-# JPA / MyBatis-Plus 使用 update 策略
-spring.jpa.hibernate.ddl-auto=validate
-mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl
+# JPA / MyBatis 配置
+spring.jpa.hibernate.ddl-auto=none
+mybatis.configuration.log-impl=org.apache.ibatis.logging.slf4j.Slf4jImpl
+mybatis.mapper-locations=classpath*:/mapper/**/*.xml
 
 # Neo4j
 spring.neo4j.uri=bolt://123.207.187.42:7687

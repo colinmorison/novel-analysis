@@ -3,7 +3,6 @@ package com.colin.novelanalysis.infrastructure.persistence.repository;
 import com.colin.novelanalysis.domain.model.User;
 import com.colin.novelanalysis.domain.repository.UserRepository;
 import com.colin.novelanalysis.infrastructure.persistence.mapper.UserMapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -25,12 +24,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        if (user.getId() == null) {
-            userMapper.insert(user);
-        } else {
-            userMapper.updateById(user);
-        }
-        return userMapper.selectOne(Wrappers.<User>lambdaQuery()
-                .eq(User::getUsername, user.getUsername()));
+        userMapper.insert(user);
+        return user;
     }
 }

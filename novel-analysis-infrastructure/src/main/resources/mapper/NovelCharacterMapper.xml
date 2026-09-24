@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.colin.novelanalysis.infrastructure.persistence.mapper.NovelCharacterMapper">
+
+    <resultMap id="characterMap" type="com.colin.novelanalysis.domain.model.NovelCharacter">
+        <id property="id" column="id"/>
+        <result property="novelId" column="novel_id"/>
+        <result property="name" column="name"/>
+        <result property="aliases" column="aliases"/>
+        <result property="profile" column="profile"/>
+        <result property="appearChunkIds" column="appear_chunk_ids"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO novel_character (novel_id, name, aliases, profile, appear_chunk_ids, created_at)
+        VALUES (#{novelId}, #{name}, #{aliases}, #{profile}, #{appearChunkIds}, #{createdAt})
+    </insert>
+
+    <select id="selectByNovelId" resultMap="characterMap">
+        SELECT * FROM novel_character WHERE novel_id = #{novelId}
+    </select>
+
+    <select id="selectByNameLike" resultMap="characterMap">
+        SELECT * FROM novel_character WHERE novel_id = #{novelId} AND name ILIKE #{name}
+    </select>
+
+</mapper>

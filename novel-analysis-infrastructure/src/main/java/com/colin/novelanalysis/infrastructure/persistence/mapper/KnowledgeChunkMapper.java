@@ -1,6 +1,5 @@
 package com.colin.novelanalysis.infrastructure.persistence.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.colin.novelanalysis.domain.model.KnowledgeChunk;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,9 +10,9 @@ import java.util.List;
  * 知识片段 Mapper
  */
 @Mapper
-public interface KnowledgeChunkMapper extends BaseMapper<KnowledgeChunk> {
+public interface KnowledgeChunkMapper {
 
-    int insertWithEmbedding(KnowledgeChunk chunk);
+    int insert(KnowledgeChunk chunk);
 
     List<KnowledgeChunk> selectByNovelId(Long novelId);
 
@@ -21,5 +20,5 @@ public interface KnowledgeChunkMapper extends BaseMapper<KnowledgeChunk> {
                                        @Param("embedding") float[] embedding,
                                        @Param("topK") int topK);
 
-    void deleteByNovelId(Long novelId);
+    int deleteByNovelId(Long novelId);
 }

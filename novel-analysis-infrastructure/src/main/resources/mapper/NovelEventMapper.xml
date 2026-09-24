@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.colin.novelanalysis.infrastructure.persistence.mapper.NovelEventMapper">
+
+    <resultMap id="eventMap" type="com.colin.novelanalysis.domain.model.NovelEvent">
+        <id property="id" column="id"/>
+        <result property="novelId" column="novel_id"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="characters" column="characters"/>
+        <result property="chapterNo" column="chapter_no"/>
+        <result property="orderInChapter" column="order_in_chapter"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO novel_event (novel_id, title, summary, characters, chapter_no, order_in_chapter, created_at)
+        VALUES (#{novelId}, #{title}, #{summary}, #{characters}, #{chapterNo}, #{orderInChapter}, #{createdAt})
+    </insert>
+
+    <select id="selectByNovelId" resultMap="eventMap">
+        SELECT * FROM novel_event WHERE novel_id = #{novelId} ORDER BY chapter_no, order_in_chapter
+    </select>
+
+    <select id="selectByNovelIdAndCharacter" resultMap="eventMap">
+        SELECT * FROM novel_event WHERE novel_id = #{novelId} AND characters ILIKE #{characterName} ORDER BY chapter_no, order_in_chapter
+    </select>
+
+</mapper>

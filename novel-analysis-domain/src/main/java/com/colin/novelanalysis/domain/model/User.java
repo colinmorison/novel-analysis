@@ -1,8 +1,5 @@
 package com.colin.novelanalysis.domain.model;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,10 +10,8 @@ import java.time.LocalDateTime;
  */
 @Data
 @Builder
-@TableName("t_user")
 public class User implements Entity {
 
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     private String username;

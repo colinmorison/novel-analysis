@@ -30,7 +30,7 @@ public class NovelRepositoryImpl implements NovelRepository {
 
     @Override
     public List<Novel> findAll() {
-        return novelMapper.selectList(null);
+        return novelMapper.selectAll();
     }
 
     @Override

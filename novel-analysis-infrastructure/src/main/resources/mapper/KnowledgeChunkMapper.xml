@@ -2,7 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.colin.novelanalysis.infrastructure.persistence.mapper.KnowledgeChunkMapper">
 
-    <insert id="insertWithEmbedding" useGeneratedKeys="true" keyProperty="id">
+    <resultMap id="knowledgeChunkMap" type="com.colin.novelanalysis.domain.model.KnowledgeChunk">
+        <id property="id" column="id"/>
+        <result property="novelId" column="novel_id"/>
+        <result property="chapterId" column="chapter_id"/>
+        <result property="chapterNo" column="chapter_no"/>
+        <result property="chapterTitle" column="chapter_title"/>
+        <result property="chunkNo" column="chunk_no"/>
+        <result property="content" column="content"/>
+        <result property="tokenCount" column="token_count"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO knowledge_chunk
             (novel_id, chapter_id, chapter_no, chapter_title, chunk_no, content, embedding, token_count, created_at)
         VALUES
@@ -11,14 +23,14 @@
              #{tokenCount}, #{createdAt})
     </insert>
 
-    <select id="selectByNovelId" resultType="com.colin.novelanalysis.domain.model.KnowledgeChunk">
+    <select id="selectByNovelId" resultMap="knowledgeChunkMap">
         SELECT id, novel_id, chapter_id, chapter_no, chapter_title, chunk_no, content, token_count, created_at
         FROM knowledge_chunk
         WHERE novel_id = #{novelId}
         ORDER BY chapter_no, chunk_no
     </select>
 
-    <select id="searchSimilar" resultType="com.colin.novelanalysis.domain.model.KnowledgeChunk">
+    <select id="searchSimilar" resultMap="knowledgeChunkMap">
         SELECT id, novel_id, chapter_id, chapter_no, chapter_title, chunk_no, content, token_count, created_at,
                embedding &lt;=&gt; #{embedding, typeHandler=com.colin.novelanalysis.infrastructure.persistence.handler.PgVectorTypeHandler} AS distance
         FROM knowledge_chunk
