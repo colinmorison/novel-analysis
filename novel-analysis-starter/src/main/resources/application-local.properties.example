@@ -1,0 +1,38 @@
+# 复制本文件为 application-local.properties 并填入真实值
+# application-local.properties 不会被提交到 Git（已加入 .gitignore）
+# 启动时添加参数：-Dspring-boot.run.profiles=local
+
+# PostgreSQL
+spring.datasource.url=jdbc:postgresql://localhost:5432/novel_analysis
+spring.datasource.username=postgres
+spring.datasource.password=
+
+# Neo4j
+spring.neo4j.uri=bolt://localhost:7687
+spring.neo4j.authentication.username=neo4j
+spring.neo4j.authentication.password=password
+
+# Redis
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.data.redis.password=
+spring.data.redis.database=0
+
+# Kafka
+spring.kafka.bootstrap-servers=localhost:9092
+
+# MinIO
+minio.endpoint=http://localhost:9000
+minio.access-key=minioadmin
+minio.secret-key=minioadmin
+minio.bucket=novel-bucket
+
+# Ollama
+langchain4j.ollama.chat-model.base-url=http://localhost:11434
+langchain4j.ollama.chat-model.model-name=qwen2.5:7b
+langchain4j.ollama.embedding-model.base-url=http://localhost:11434
+langchain4j.ollama.embedding-model.model-name=nomic-embed-text
+
+# AI Provider（ollama / openai / dashscope / deepseek）
+# 默认 ollama，如需切换请同时配置对应 starter 的 api-key 和 base-url
+novel.ai.provider=ollama

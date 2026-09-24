@@ -7,8 +7,10 @@ import com.colin.novelanalysis.interfaces.rest.dto.ApiResult;
 import com.colin.novelanalysis.interfaces.rest.dto.ChatRequest;
 import com.colin.novelanalysis.interfaces.rest.dto.ChatResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * 聊天接口
@@ -31,5 +33,21 @@ public class ChatController {
                 .sessionId(result.getSessionId())
                 .reply(result.getReply())
                 .build());
+    }
+
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter stream(@RequestParam String sessionId, @RequestParam String question) {
+        SseEmitter emitter = new SseEmitter(0L);
+        chatApplicationService.streamChat(
+                ChatCommand.builder().sessionId(sessionId).userMessage(question).build(),
+                token -> {
+                    try {
+                        emitter.send(SseEmitter.event().data(token));
+                    } catch (Exception e) {
+                        emitter.completeWithError(e);
+                    }
+                },
+                emitter::complete);
+        return emitter;
     }
 }
